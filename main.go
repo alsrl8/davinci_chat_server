@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/websocket/v2"
+	"log"
 	"os"
 	"time"
 )
@@ -27,13 +28,23 @@ func main() {
 	})
 
 	app.Get("/ws", websocket.New(func(c *websocket.Conn) {
+		log.Println("WebSocket connected")
+
+		// 연결 성공시 기본 메시지 전송
+		c.WriteMessage(websocket.TextMessage, []byte("Welcome to the WebSocket server"))
+
 		for {
 			mt, msg, err := c.ReadMessage()
 			if err != nil {
-				return
+				log.Println("read:", err)
+				break
 			}
-			if err = c.WriteMessage(mt, msg); err != nil {
-				return
+			log.Printf("recv: %s", msg)
+
+			err = c.WriteMessage(mt, msg)
+			if err != nil {
+				log.Println("write:", err)
+				break
 			}
 		}
 	}))
