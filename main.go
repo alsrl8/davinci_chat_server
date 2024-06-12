@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/websocket/v2"
 	"log"
@@ -12,9 +13,14 @@ import (
 func main() {
 	app := fiber.New()
 
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH",
+	}))
+
 	app.Use(limiter.New(limiter.Config{
-		Max:        10,
-		Expiration: 30 * time.Second,
+		Max:        100,
+		Expiration: 60 * time.Second,
 	}))
 
 	app.Get("/", func(c *fiber.Ctx) error {
