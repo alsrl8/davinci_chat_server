@@ -33,7 +33,14 @@ func main() {
 		})
 	})
 
-	app.Get("/ws", websocket.New(func(c *websocket.Conn) {
+	app.Get("/ws", func(c *fiber.Ctx) error {
+		if websocket.IsWebSocketUpgrade(c) {
+			log.Println("Upgrading to WebSocket")
+			c.Locals("allowed", true)
+			return c.Next()
+		}
+		return c.SendStatus(fiber.StatusUpgradeRequired)
+	}, websocket.New(func(c *websocket.Conn) {
 		log.Println("WebSocket connected")
 
 		// 연결 성공시 기본 메시지 전송
