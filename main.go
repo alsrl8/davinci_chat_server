@@ -54,8 +54,5 @@ func main() {
 		port = "8080"
 	}
 
-	err := app.Listen(":8080")
-	if err != nil {
-		return
-	}
+	log.Fatal(app.Listen(":" + port))
 }
