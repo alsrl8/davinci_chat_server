@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
+	"github.com/gofiber/websocket/v2"
 	"os"
 	"time"
 )
@@ -24,6 +25,18 @@ func main() {
 			"message": "pong",
 		})
 	})
+
+	app.Get("/ws", websocket.New(func(c *websocket.Conn) {
+		for {
+			mt, msg, err := c.ReadMessage()
+			if err != nil {
+				return
+			}
+			if err = c.WriteMessage(mt, msg); err != nil {
+				return
+			}
+		}
+	}))
 
 	port := os.Getenv("PORT")
 	if port == "" {
