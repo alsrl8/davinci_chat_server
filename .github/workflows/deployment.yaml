@@ -46,5 +46,9 @@ jobs:
         with:
           project_id: '${{ secrets.GCP_PROJECT_ID }}'
 
+      - name: Set up Firebase Config
+        run: |
+          echo "${{ secrets.FIREBASE_CONFIG }}" > firebase_config.json
+
       - name: Deploy to App Engine
         run: gcloud app deploy chat.yaml --quiet
