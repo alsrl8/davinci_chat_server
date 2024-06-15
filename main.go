@@ -1,66 +1,24 @@
 package main
 
 import (
+	"davinci-chat/auth"
+	"davinci-chat/middlewares"
+	"davinci-chat/routes"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/limiter"
-	"github.com/gofiber/websocket/v2"
 	"log"
 	"os"
-	"time"
 )
 
 func main() {
+	log.Println("Starting server...")
+	auth.InitFirebase()
+
 	app := fiber.New()
 
-	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
-		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH",
-	}))
+	app.Use(middlewares.NewCORS())
+	app.Use(middlewares.NewLimiter())
 
-	app.Use(limiter.New(limiter.Config{
-		Max:        100,
-		Expiration: 60 * time.Second,
-	}))
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, Game Server!")
-	})
-
-	app.Get("/ping", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{
-			"message": "pong",
-		})
-	})
-
-	app.Get("/ws", func(c *fiber.Ctx) error {
-		if websocket.IsWebSocketUpgrade(c) {
-			log.Println("Upgrading to WebSocket")
-			c.Locals("allowed", true)
-			return c.Next()
-		}
-		return c.SendStatus(fiber.StatusUpgradeRequired)
-	}, websocket.New(func(c *websocket.Conn) {
-		log.Println("WebSocket connected")
-
-		// 연결 성공시 기본 메시지 전송
-		c.WriteMessage(websocket.TextMessage, []byte("Welcome to the WebSocket server"))
-
-		for {
-			mt, msg, err := c.ReadMessage()
-			if err != nil {
-				log.Println("read:", err)
-				break
-			}
-			log.Printf("recv: %s", msg)
-
-			err = c.WriteMessage(mt, msg)
-			if err != nil {
-				log.Println("write:", err)
-				break
-			}
-		}
-	}))
+	routes.SetupRoutes(app)
 
 	port := os.Getenv("PORT")
 	if port == "" {
