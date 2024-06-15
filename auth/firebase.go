@@ -6,14 +6,12 @@ import (
 	"log"
 
 	"firebase.google.com/go/auth"
-	"google.golang.org/api/option"
 )
 
 var FirebaseAuth *auth.Client
 
 func InitFirebase() {
-	opt := option.WithCredentialsFile("firebase_config.json")
-	app, err := firebase.NewApp(context.Background(), nil, opt)
+	app, err := firebase.NewApp(context.Background(), nil)
 	if err != nil {
 		log.Fatalf("error initializing app: %v\n", err)
 	}
