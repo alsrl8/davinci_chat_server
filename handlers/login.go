@@ -39,7 +39,7 @@ func LoginHandler(c *fiber.Ctx) error {
 		Expires:  time.Now().Add(24 * time.Hour),
 		HTTPOnly: true,
 		Secure:   true,
-		SameSite: fiber.CookieSameSiteLaxMode,
+		SameSite: fiber.CookieSameSiteNoneMode,
 		Path:     "/",
 		Domain:   "chat-dot-davinci-song.du.r.appspot.com",
 	})
