@@ -41,7 +41,7 @@ func LoginHandler(c *fiber.Ctx) error {
 		Secure:   true,
 		SameSite: fiber.CookieSameSiteNoneMode,
 		Path:     "/",
-		Domain:   "chat-dot-davinci-song.du.r.appspot.com",
+		Domain:   "songmingi.com",
 	})
 
 	return c.JSON(fiber.Map{"message": "Login successful"})
