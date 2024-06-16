@@ -41,7 +41,7 @@ func LoginHandler(c *fiber.Ctx) error {
 		Secure:   true,
 		SameSite: "Lax",
 		Path:     "/",
-		Domain:   "localhost",
+		Domain:   "songmingi.com",
 	})
 
 	return c.JSON(fiber.Map{"message": "Login successful"})
