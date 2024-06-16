@@ -3,12 +3,14 @@ package middlewares
 import (
 	"context"
 	"davinci-chat/auth"
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"strings"
 )
 
 func JWTMiddleware(c *fiber.Ctx) error {
 	token := c.Cookies("idToken")
+	fmt.Printf("token: {%s}", token)
 	if token == "" {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Missing or invalid JWT"})
 	}
