@@ -2,17 +2,18 @@ package main
 
 import (
 	"davinci-chat/auth"
+	"davinci-chat/config"
 	"davinci-chat/middlewares"
 	"davinci-chat/routes"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"log"
 	"os"
 )
 
 func main() {
-	log.Println("Starting server...(log)")
-	fmt.Println("Starting server...(stdout)")
+	env := config.GetRunEnv()
+	log.Printf("Running on %s\n", env)
+
 	auth.InitFirebase()
 
 	app := fiber.New()

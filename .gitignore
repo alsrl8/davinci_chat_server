@@ -1,2 +1,2 @@
-firebase_config.json
+*.json
 .env
