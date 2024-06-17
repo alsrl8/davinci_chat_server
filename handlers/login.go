@@ -40,7 +40,7 @@ func LoginHandler(c *fiber.Ctx) error {
 		Value:    idToken,
 		Expires:  time.Now().Add(24 * time.Hour),
 		HTTPOnly: true,
-		Secure:   true,
+		Secure:   false,
 		SameSite: fiber.CookieSameSiteNoneMode,
 		Path:     "/",
 		Domain:   getCookieDomain(),
