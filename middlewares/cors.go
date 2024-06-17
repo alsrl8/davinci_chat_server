@@ -23,7 +23,7 @@ func getAllowOrigin(env consts.RunEnv) (allowOrigin string) {
 	case consts.Production:
 		allowOrigin = "https://songmingi.com"
 	case consts.Development:
-		allowOrigin = "http//localhost:3000"
+		allowOrigin = "http://localhost:3000"
 	}
 	return
 }

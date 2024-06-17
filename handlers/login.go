@@ -3,6 +3,8 @@ package handlers
 import (
 	"context"
 	"davinci-chat/auth"
+	"davinci-chat/config"
+	"davinci-chat/consts"
 	"github.com/gofiber/fiber/v2"
 	"log"
 	"strings"
@@ -41,8 +43,20 @@ func LoginHandler(c *fiber.Ctx) error {
 		Secure:   true,
 		SameSite: fiber.CookieSameSiteNoneMode,
 		Path:     "/",
-		Domain:   "chat-dot-davinci-song.du.r.appspot.com",
+		Domain:   getCookieDomain(),
 	})
 
 	return c.JSON(fiber.Map{"message": "Login successful"})
+}
+
+func getCookieDomain() string {
+	runEnv := config.GetRunEnv()
+	domain := ""
+	switch runEnv {
+	case consts.Development:
+		domain = "localhost"
+	case consts.Production:
+		domain = "chat-dot-davinci-song.du.r.appspot.com"
+	}
+	return domain
 }
