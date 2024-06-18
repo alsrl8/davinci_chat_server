@@ -38,14 +38,15 @@ func LoginHandler(c *fiber.Ctx) error {
 	c.Cookie(&fiber.Cookie{
 		Name:     "idToken",
 		Value:    idToken,
-		Expires:  time.Now().Add(24 * time.Hour),
+		Expires:  time.Now().Add(time.Hour),
 		HTTPOnly: true,
-		Secure:   false,
+		Secure:   true,
 		SameSite: fiber.CookieSameSiteNoneMode,
 		Path:     "/",
 		Domain:   getCookieDomain(),
 	})
 
+	c.Set("X-Id-Token", idToken)
 	return c.JSON(fiber.Map{"message": "Login successful"})
 }
 

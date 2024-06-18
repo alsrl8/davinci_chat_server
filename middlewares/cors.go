@@ -15,7 +15,7 @@ func NewCORS() fiber.Handler {
 		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH",
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowCredentials: true,
-		ExposeHeaders:    "Set-Cookie",
+		ExposeHeaders:    "X-Id-Token",
 	})
 }
 
