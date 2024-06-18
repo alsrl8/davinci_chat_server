@@ -7,6 +7,7 @@ import (
 )
 
 func SetupRoutes(app *fiber.App) {
+	app.Use(middlewares.RedirectHTTPtoHTTPS)
 	app.Get("/", handlers.Root)
 	app.Get("/ping", handlers.Ping)
 	app.Use("/ws", middlewares.JWTMiddleware)
