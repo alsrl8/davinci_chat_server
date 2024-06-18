@@ -12,8 +12,6 @@ func RedirectHTTPtoHTTPS(c *fiber.Ctx) error {
 		if c.Protocol() == "http" {
 			return c.Redirect("https://"+c.Hostname()+c.OriginalURL(), 301)
 		}
-		return c.Next()
-	} else {
-		return c.Next()
 	}
+	return c.Next()
 }
