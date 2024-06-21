@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+
 	env := config.GetRunEnv()
 	log.Printf("Running on %s\n", env)
 

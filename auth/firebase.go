@@ -10,6 +10,10 @@ import (
 
 var FirebaseAuth *auth.Client
 
+type FbInterface struct {
+	name string
+}
+
 func InitFirebase() {
 	app, err := firebase.NewApp(context.Background(), nil)
 	if err != nil {
