@@ -15,8 +15,6 @@ func Websocket(c *fiber.Ctx) error {
 }
 
 var Ws = websocket.New(func(c *websocket.Conn) {
-	c.WriteMessage(websocket.TextMessage, []byte("Welcome to the WebSocket server"))
-
 	for {
 		mt, msg, err := c.ReadMessage()
 		if err != nil {

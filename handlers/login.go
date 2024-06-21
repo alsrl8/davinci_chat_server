@@ -5,8 +5,8 @@ import (
 	"davinci-chat/auth"
 	"davinci-chat/config"
 	"davinci-chat/consts"
+	"davinci-chat/user"
 	"github.com/gofiber/fiber/v2"
-	"log"
 	"strings"
 	"time"
 )
@@ -33,7 +33,14 @@ func LoginHandler(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid JWT"})
 	}
 
-	log.Printf("User authenticated with UID: %s", decodedToken.UID)
+	email := decodedToken.Claims["email"].(string)
+	userService := user.NewUserService(context.Background())
+	getUser, err := userService.GetUser(context.Background(), email)
+	if err != nil {
+		return err
+	}
+
+	userName := getUser.Name
 
 	c.Cookie(&fiber.Cookie{
 		Name:     "idToken",
@@ -47,7 +54,7 @@ func LoginHandler(c *fiber.Ctx) error {
 	})
 
 	c.Set("X-Id-Token", idToken)
-	return c.JSON(fiber.Map{"message": "Login successful"})
+	return c.JSON(fiber.Map{"message": "Login successful", "email": email, "name": userName})
 }
 
 func getCookieDomain() string {

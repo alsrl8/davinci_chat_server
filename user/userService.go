@@ -10,7 +10,7 @@ import (
 
 type Service interface {
 	AddUser(ctx context.Context, user *User, email string) error
-	GetUser(ctx context.Context, id string) (*User, error)
+	GetUser(ctx context.Context, email string) (*User, error)
 	Close() error
 }
 
@@ -34,8 +34,8 @@ func (us *userService) AddUser(ctx context.Context, user *User, email string) er
 	return nil
 }
 
-func (us *userService) GetUser(ctx context.Context, id string) (*User, error) {
-	doc, err := us.client.Collection("users").Doc(id).Get(ctx)
+func (us *userService) GetUser(ctx context.Context, email string) (*User, error) {
+	doc, err := us.client.Collection("users").Doc(email).Get(ctx)
 	if err != nil {
 		return nil, err
 	}
