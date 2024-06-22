@@ -20,7 +20,10 @@ type userService struct {
 
 func (us *userService) AddUser(ctx context.Context, user *User, email string) error {
 	doc := us.client.Collection("users").Doc(email)
-	if _, err := doc.Set(ctx, user); err != nil {
+	userPublic := UserPublic{
+		Name: user.Name,
+	}
+	if _, err := doc.Set(ctx, userPublic); err != nil {
 		return err
 	}
 
