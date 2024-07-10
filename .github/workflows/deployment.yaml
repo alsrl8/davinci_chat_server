@@ -40,8 +40,7 @@ jobs:
 
       - name: Setup SSH Key
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.EC2_SSH_KEY }}" > id_rsa
           chmod 400 ~/.ssh/id_rsa
 
       - name: Create text file
@@ -50,7 +49,6 @@ jobs:
 
       - name: Copy binary to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa message.txt ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/davinci/message.txt
-          scp -i ~/.ssh/id_rsa ./ ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/davinci/
+          scp -o StrictHostKeyChecking=no -i id_rsa message.txt ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/davinci/message.txt
 #          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} 'sudo systemctl restart myapp.service'
 
