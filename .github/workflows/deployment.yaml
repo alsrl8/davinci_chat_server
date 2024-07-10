@@ -43,6 +43,9 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          ls -l ~/.ssh/
+          echo "Checking file size..."
+          wc -c < ~/.ssh/id_rsa
 
       - name: Copy binary to EC2
         run: |
