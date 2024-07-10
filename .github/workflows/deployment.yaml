@@ -28,27 +28,18 @@ jobs:
       - name: Install dependencies
         run: go mod download
 
-      - name: Set up Firebase Config
-        run: |
-          echo "${{ secrets.FIREBASE_CONFIG }}" > firebase_config.json
-
       - name: Build
         run: go build -v
 
-      #      - name: Run tests
-      #        run: go test -v ./...
-
-      - name: Google auth
-        id: 'auth'
-        uses: google-github-actions/auth@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          workload_identity_provider: 'projects/${{ secrets.GCP_PROJECT_ID }}/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
-          service_account: '${{ secrets.SERVICE_ACCOUNT_EMAIL }}'
+          aws-region: ap-northeast-2
+          role-to-assume: arn:aws:iam::621271098372:role/davinci-song-chat-server-role
+          role-session-name: davinci-song-chat-server-role
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: '${{ secrets.GCP_PROJECT_ID }}'
+      - name: Copy binary to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no ./ ec2-user@${{ secrets.EC2_IP }}:/home/ubuntu/davinci/
+#          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} 'sudo systemctl restart myapp.service'
 
-      - name: Deploy to App Engine
-        run: gcloud app deploy chat.yaml --quiet
