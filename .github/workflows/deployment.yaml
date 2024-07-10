@@ -16,11 +16,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Create text file
-      run: |
-        echo "Hello, this is a test file from GitHub Actions!" > message.txt
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Copy text file to EC2
-      run: |
-        scp -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_KEY }} ./message.txt ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.20'
+      - run: go version
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Build
+        run: go build -v
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ap-northeast-2
+          role-to-assume: arn:aws:iam::621271098372:role/davinci-song-chat-server-role
+          role-session-name: davinci-song-chat-server-role
+
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+
+      - name: Copy binary to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ./ ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/davinci/
+          scp -i ~/.ssh/id_rsa ./ ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/davinci/
+#          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} 'sudo systemctl restart myapp.service'
 
