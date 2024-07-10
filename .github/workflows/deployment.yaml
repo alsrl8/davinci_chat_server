@@ -50,7 +50,7 @@ jobs:
 
       - name: Copy binary to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ./message.txt ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/davinci/
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ./message.txt ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/davinci/message.txt
           scp -i ~/.ssh/id_rsa ./ ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/davinci/
 #          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} 'sudo systemctl restart myapp.service'
 
