@@ -2,6 +2,7 @@ package main
 
 import (
 	"davinci-chat/config"
+	"davinci-chat/middlewares"
 	"davinci-chat/routes"
 	"github.com/gofiber/fiber/v2"
 	"log"
@@ -13,12 +14,10 @@ func main() {
 	env := config.GetRunEnv()
 	log.Printf("Running on %s\n", env)
 
-	//auth.InitFirebase()
-
 	app := fiber.New()
 
-	//app.Use(middlewares.NewCORS())
-	//app.Use(middlewares.NewLimiter())
+	app.Use(middlewares.NewCORS())
+	app.Use(middlewares.NewLimiter())
 
 	routes.SetupRoutes(app)
 
