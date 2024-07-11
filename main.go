@@ -2,6 +2,7 @@ package main
 
 import (
 	"davinci-chat/config"
+	"davinci-chat/consts"
 	"davinci-chat/middlewares"
 	"davinci-chat/routes"
 	"github.com/gofiber/fiber/v2"
@@ -26,5 +27,12 @@ func main() {
 		port = "8080"
 	}
 
-	log.Fatal(app.Listen(":" + port))
+	switch env {
+	case consts.Production:
+		certPath := os.Getenv("CERT_PATH")
+		keyPath := os.Getenv("KEY_PATH")
+		log.Fatal(app.ListenTLS(":"+port, certPath, keyPath))
+	case consts.Development:
+		log.Fatal(app.Listen(":" + port))
+	}
 }
