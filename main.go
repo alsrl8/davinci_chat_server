@@ -1,7 +1,6 @@
 package main
 
 import (
-	"davinci-chat/auth"
 	"davinci-chat/config"
 	"davinci-chat/middlewares"
 	"davinci-chat/routes"
@@ -15,7 +14,7 @@ func main() {
 	env := config.GetRunEnv()
 	log.Printf("Running on %s\n", env)
 
-	auth.InitFirebase()
+	//auth.InitFirebase()
 
 	app := fiber.New()
 
