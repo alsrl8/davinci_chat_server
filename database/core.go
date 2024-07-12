@@ -11,10 +11,12 @@ type Database interface {
 	Close() error
 
 	AddUser(request types.NewUserRequest) error
-	ValidateUser(request types.ValidateUserRequest) error
+	ValidateNewUser(request types.ValidateUserRequest) error
+
+	Login(request types.LoginRequest) (string, error)
 }
 
-func GetUserDatabase() Database {
+func GetDatabase() Database {
 	once.Do(func() {
 		dsName := config.GetDataSourceName("user")
 		sqlite, err := sql.Open("sqlite3", dsName)

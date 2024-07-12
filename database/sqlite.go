@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"davinci-chat/err_types"
 	"davinci-chat/types"
+	"errors"
 	"log"
 	"sync"
 
@@ -27,8 +28,12 @@ func (s *SQLiteDB) AddUser(request types.NewUserRequest) error {
 	return s.createUser(request)
 }
 
-func (s *SQLiteDB) ValidateUser(request types.ValidateUserRequest) error {
+func (s *SQLiteDB) ValidateNewUser(request types.ValidateUserRequest) error {
 	return s.validateUser(request)
+}
+
+func (s *SQLiteDB) Login(request types.LoginRequest) (string, error) {
+	return s.login(request)
 }
 
 func (s *SQLiteDB) createTables() {
@@ -63,4 +68,22 @@ func (s *SQLiteDB) validateUser(request types.ValidateUserRequest) error {
 	}
 
 	return nil
+}
+
+func (s *SQLiteDB) login(request types.LoginRequest) (string, error) {
+	email := request.UserEmail
+	password := request.Password
+
+	loginQuery := `SELECT name FROM user WHERE email = ? and password = ?;`
+	row := s.db.QueryRow(loginQuery, email, password)
+
+	var name string
+	if err := row.Scan(&name); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return "", err_types.ErrEmailPasswordNotMatch
+		}
+		return "", err
+	}
+
+	return name, nil
 }

@@ -17,8 +17,8 @@ func ValidateUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	db := database.GetUserDatabase()
-	err := db.ValidateUser(validateUser)
+	db := database.GetDatabase()
+	err := db.ValidateNewUser(validateUser)
 	if err != nil {
 		switch {
 		case errors.Is(err, err_types.ErrUserExists):
@@ -36,7 +36,7 @@ func AddNewUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Failed to parse request"})
 	}
 
-	db := database.GetUserDatabase()
+	db := database.GetDatabase()
 	err := db.AddUser(newUser)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Failed to add user"})

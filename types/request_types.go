@@ -18,3 +18,8 @@ func (req *ValidateUserRequest) Validate() error {
 	}
 	return nil
 }
+
+type LoginRequest struct {
+	UserEmail string `json:"userEmail"`
+	Password  string `json:"password"`
+}
