@@ -3,6 +3,7 @@ package main
 import (
 	"davinci-chat/config"
 	"davinci-chat/consts"
+	"davinci-chat/database"
 	"davinci-chat/middlewares"
 	"davinci-chat/routes"
 	"github.com/gofiber/fiber/v2"
@@ -21,6 +22,14 @@ func main() {
 	app.Use(middlewares.NewLimiter())
 
 	routes.SetupRoutes(app)
+
+	db := database.GetDatabase()
+	defer func(db database.Database) {
+		err := db.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(db)
 
 	switch env {
 	case consts.Production:
