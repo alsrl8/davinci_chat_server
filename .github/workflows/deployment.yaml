@@ -43,8 +43,12 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > id_rsa
           chmod 400 id_rsa
 
+      - name: Stop service
+        run: |
+          ssh -i id_rsa ubuntu@${{ secrets.EC2_IP }} 'sudo systemctl stop chat.service'          
+
       - name: Copy binary to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -i id_rsa chat ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/davinci/chat
+          scp -i id_rsa chat ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/davinci/chat
 #          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} 'sudo systemctl restart myapp.service'
 
