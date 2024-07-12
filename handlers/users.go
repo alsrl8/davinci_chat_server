@@ -6,7 +6,6 @@ import (
 	"davinci-chat/types"
 	"errors"
 	"github.com/gofiber/fiber/v2"
-	"log"
 )
 
 func ValidateUser(c *fiber.Ctx) error {
@@ -18,7 +17,7 @@ func ValidateUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	db := database.GetDatabase()
+	db := database.GetUserDatabase()
 	err := db.ValidateUser(validateUser)
 	if err != nil {
 		switch {
@@ -37,11 +36,10 @@ func AddNewUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Failed to parse request"})
 	}
 
-	db := database.GetDatabase()
+	db := database.GetUserDatabase()
 	err := db.AddUser(newUser)
 	if err != nil {
-		log.Fatal(err)
-
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Failed to add user"})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"user": newUser.UserName})

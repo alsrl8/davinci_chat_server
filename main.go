@@ -23,7 +23,7 @@ func main() {
 
 	routes.SetupRoutes(app)
 
-	db := database.GetDatabase()
+	db := database.GetUserDatabase()
 	defer func(db database.Database) {
 		err := db.Close()
 		if err != nil {

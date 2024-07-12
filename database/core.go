@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"davinci-chat/config"
 	"davinci-chat/types"
 	"log"
 )
@@ -13,9 +14,10 @@ type Database interface {
 	ValidateUser(request types.ValidateUserRequest) error
 }
 
-func GetDatabase() Database {
+func GetUserDatabase() Database {
 	once.Do(func() {
-		sqlite, err := sql.Open("sqlite3", "./user.sqlite")
+		dsName := config.GetDataSourceName("user")
+		sqlite, err := sql.Open("sqlite3", dsName)
 		if err != nil {
 			log.Fatalf("Failed to open database: %v", err)
 		}
