@@ -52,3 +52,7 @@ jobs:
           scp -o StrictHostKeyChecking=no -i id_rsa chat ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/davinci/chat
 #          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} 'sudo systemctl restart myapp.service'
 
+      - name: Start service
+        run: |
+          ssh -o StrictHostKeyChecking=no -i id_rsa ubuntu@${{ secrets.EC2_IP }} 'sudo systemctl start chat.service'
+
