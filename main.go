@@ -17,7 +17,7 @@ func main() {
 
 	app := fiber.New()
 
-	//app.Use(middlewares.NewCORS())
+	app.Use(middlewares.NewCORS())
 	app.Use(middlewares.NewLimiter())
 
 	routes.SetupRoutes(app)
