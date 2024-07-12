@@ -18,7 +18,7 @@ func main() {
 
 	app := fiber.New()
 
-	//app.Use(middlewares.NewCORS())
+	app.Use(middlewares.NewCORS())
 	app.Use(middlewares.NewLimiter())
 
 	routes.SetupRoutes(app)
@@ -35,7 +35,11 @@ func main() {
 	case consts.Production:
 		certPath := os.Getenv("CERT_PATH")
 		keyPath := os.Getenv("KEY_PATH")
-		log.Fatal(app.ListenTLS(":8080", certPath, keyPath))
+		port := os.Getenv("PORT")
+		if port == "" {
+			port = "8080"
+		}
+		log.Fatal(app.ListenTLS(":"+port, certPath, keyPath))
 	case consts.Development:
 		port := os.Getenv("PORT")
 		if port == "" {
