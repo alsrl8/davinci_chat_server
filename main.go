@@ -35,7 +35,7 @@ func main() {
 	case consts.Production:
 		certPath := os.Getenv("CERT_PATH")
 		keyPath := os.Getenv("KEY_PATH")
-		log.Fatal(app.ListenTLS("chat.songmingi.com:8080", certPath, keyPath))
+		log.Fatal(app.ListenTLS(":8080", certPath, keyPath))
 	case consts.Development:
 		port := os.Getenv("PORT")
 		if port == "" {
