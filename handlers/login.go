@@ -1,11 +1,10 @@
 package handlers
 
 import (
-	"davinci-chat/config"
-	"davinci-chat/consts"
 	"davinci-chat/database"
 	"davinci-chat/err_types"
 	"davinci-chat/types"
+	"davinci-chat/utils"
 	"errors"
 	"github.com/gofiber/fiber/v2"
 )
@@ -27,18 +26,13 @@ func LoginHandler(c *fiber.Ctx) error {
 		}
 	}
 
-	email := request.UserEmail
-	return c.JSON(fiber.Map{"message": "Login successful", "email": email, "name": name})
-}
-
-func getCookieDomain() string {
-	runEnv := config.GetRunEnv()
-	domain := ""
-	switch runEnv {
-	case consts.Development:
-		domain = "localhost"
-	case consts.Production:
-		domain = "chat-dot-davinci-song.du.r.appspot.com"
+	token, err := utils.MakeJwt(name, request.UserEmail)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Failed to generate token"})
 	}
-	return domain
+
+	cookie := utils.MakeJwtCookie(token)
+	c.Cookie(cookie)
+
+	return c.JSON(fiber.Map{"message": "Login successful", "email": request.UserEmail, "name": name})
 }

@@ -11,7 +11,7 @@ func SetupRoutes(app *fiber.App) {
 	app.Get("/", handlers.Root)
 	app.Get("/ping", handlers.Ping)
 	app.Post("/login", handlers.LoginHandler)
-	//app.Use("/ws", middlewares.JWTMiddleware)
+	app.Use("/ws", middlewares.JWTMiddleware)
 	app.Get("/ws", handlers.Websocket, handlers.Ws)
 	app.Post("/new-user", handlers.AddNewUser)
 	app.Post("/user-validation", handlers.ValidateUser)
