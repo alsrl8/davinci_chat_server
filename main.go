@@ -4,17 +4,19 @@ import (
 	"davinci-chat/config"
 	"davinci-chat/consts"
 	"davinci-chat/database"
+	"davinci-chat/logx"
 	"davinci-chat/middlewares"
 	"davinci-chat/routes"
 	"github.com/gofiber/fiber/v2"
-	"log"
 	"os"
 )
 
 func main() {
-
 	env := config.GetRunEnv()
-	log.Printf("Running on %s\n", env)
+
+	logger := logx.GetLogger()
+	defer logger.Close()
+	logger.Info("Running on ", env)
 
 	app := fiber.New()
 
@@ -27,7 +29,7 @@ func main() {
 	defer func(db database.Database) {
 		err := db.Close()
 		if err != nil {
-			log.Fatal(err)
+			logger.Fatal(err)
 		}
 	}(db)
 
@@ -39,12 +41,12 @@ func main() {
 		if port == "" {
 			port = "8080"
 		}
-		log.Fatal(app.ListenTLS(":"+port, certPath, keyPath))
+		logger.Fatal(app.ListenTLS(":"+port, certPath, keyPath))
 	case consts.Development:
 		port := os.Getenv("PORT")
 		if port == "" {
 			port = "8080"
 		}
-		log.Fatal(app.Listen("localhost:" + port))
+		logger.Fatal(app.Listen("localhost:" + port))
 	}
 }

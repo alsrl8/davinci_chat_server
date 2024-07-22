@@ -6,6 +6,7 @@ import (
 	"davinci-chat/types"
 	"errors"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/martian/v3/log"
 )
 
 func ValidateUser(c *fiber.Ctx) error {
@@ -27,6 +28,7 @@ func ValidateUser(c *fiber.Ctx) error {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 		}
 	}
+
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"user": validateUser})
 }
 
@@ -41,6 +43,8 @@ func AddNewUser(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Failed to add user"})
 	}
+
+	log.Infof("New user(%s) has added with email(%s)", newUser.UserName, newUser.UserEmail)
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"user": newUser.UserName})
 }
