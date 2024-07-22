@@ -3,10 +3,10 @@ package handlers
 import (
 	"davinci-chat/database"
 	"davinci-chat/err_types"
+	"davinci-chat/logx"
 	"davinci-chat/types"
 	"errors"
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/martian/v3/log"
 )
 
 func ValidateUser(c *fiber.Ctx) error {
@@ -33,6 +33,8 @@ func ValidateUser(c *fiber.Ctx) error {
 }
 
 func AddNewUser(c *fiber.Ctx) error {
+	logger := logx.GetLogger()
+
 	var newUser types.NewUserRequest
 	if err := c.BodyParser(&newUser); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Failed to parse request"})
@@ -44,7 +46,7 @@ func AddNewUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Failed to add user"})
 	}
 
-	log.Infof("New user(%s) has added with email(%s)", newUser.UserName, newUser.UserEmail)
+	logger.Info("New user(%s) has added with email(%s)", newUser.UserName, newUser.UserEmail)
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"user": newUser.UserName})
 }

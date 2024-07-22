@@ -16,7 +16,7 @@ func main() {
 
 	logger := logx.GetLogger()
 	defer logger.Close()
-	logger.Info("Running on ", env)
+	logger.Info("Running on %v", env)
 
 	app := fiber.New()
 

@@ -1,12 +1,12 @@
 package handlers
 
 import (
+	"davinci-chat/logx"
 	"davinci-chat/types"
 	"davinci-chat/utils"
 	"encoding/json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/websocket/v2"
-	"log"
 )
 
 func Websocket(c *fiber.Ctx) error {
@@ -18,10 +18,12 @@ func Websocket(c *fiber.Ctx) error {
 }
 
 var Ws = websocket.New(func(c *websocket.Conn) {
+	logger := logx.GetLogger()
+
 	for {
 		mt, msg, err := c.ReadMessage()
 		if err != nil {
-			log.Println("read:", err)
+			logger.Info("read error: %v", err)
 			break
 		}
 
@@ -30,12 +32,12 @@ var Ws = websocket.New(func(c *websocket.Conn) {
 			messageObj := types.Message{User: "system", Message: "can't find user information"}
 			jsonData, err := json.Marshal(messageObj)
 			if err != nil {
-				log.Println("json marshal error:", err)
+				logger.Info("json marshal error: %v", err)
 				break
 			}
 			err = c.WriteMessage(mt, jsonData)
 			if err != nil {
-				log.Println("write:", err)
+				logger.Info("write error: %v", err)
 				break
 			}
 		}
@@ -43,13 +45,13 @@ var Ws = websocket.New(func(c *websocket.Conn) {
 		messageObj := types.Message{User: userName, Message: string(msg)}
 		jsonData, err := json.Marshal(messageObj)
 		if err != nil {
-			log.Println("json marshal error:", err)
+			logger.Info("json marshal error: %v", err)
 			break
 		}
 
 		err = c.WriteMessage(mt, jsonData)
 		if err != nil {
-			log.Println("write:", err)
+			logger.Info("write error: %v", err)
 			break
 		}
 	}
