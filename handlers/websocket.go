@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/websocket/v2"
+	"sync"
 )
 
 func Websocket(c *fiber.Ctx) error {
@@ -17,8 +18,26 @@ func Websocket(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusUpgradeRequired)
 }
 
+var mutex sync.Mutex
+
+var connections = make(map[*websocket.Conn]bool)
+
 var Ws = websocket.New(func(c *websocket.Conn) {
 	logger := logx.GetLogger()
+
+	mutex.Lock()
+	connections[c] = true
+	mutex.Unlock()
+
+	defer func() {
+		mutex.Lock()
+		delete(connections, c)
+		mutex.Unlock()
+		err := c.Close()
+		if err != nil {
+			logger.Info("close connection error: %v", err)
+		}
+	}()
 
 	for {
 		mt, msg, err := c.ReadMessage()
@@ -43,16 +62,31 @@ var Ws = websocket.New(func(c *websocket.Conn) {
 		}
 
 		messageObj := types.Message{User: userName, Message: string(msg)}
-		jsonData, err := json.Marshal(messageObj)
-		if err != nil {
-			logger.Info("json marshal error: %v", err)
-			break
-		}
-
-		err = c.WriteMessage(mt, jsonData)
-		if err != nil {
-			logger.Info("write error: %v", err)
-			break
-		}
+		broadcastMessage(mt, messageObj, c)
 	}
 })
+
+func broadcastMessage(mt int, message types.Message, sender *websocket.Conn) {
+	logger := logx.GetLogger()
+
+	jsonData, err := json.Marshal(message)
+	if err != nil {
+		logger.Info("write error: %v", err)
+		return
+	}
+
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	for conn := range connections {
+		if conn == sender {
+			continue
+		}
+
+		err = conn.WriteMessage(mt, jsonData)
+		if err != nil {
+			logger.Info("write error on broadcast to %v: %v", conn.RemoteAddr(), err)
+			continue
+		}
+	}
+}
