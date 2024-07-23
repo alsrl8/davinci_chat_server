@@ -79,9 +79,6 @@ func broadcastMessage(mt int, message types.Message, sender *websocket.Conn) {
 	defer mutex.Unlock()
 
 	for conn := range connections {
-		if conn == sender {
-			continue
-		}
 
 		err = conn.WriteMessage(mt, jsonData)
 		if err != nil {
