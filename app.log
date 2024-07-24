@@ -3,3 +3,54 @@
 2024/07/15 11:01:07 [FATAL] Fatal test
 2024/07/15 11:12:21 [FATAL] Running on %!s(MISSING)development
 2024/07/15 11:13:24 [FATAL] Running on development
+2024/07/24 16:25:48 [INFO] Running on development
+2024/07/24 16:27:14 [INFO] New user(songmingi10) has added with email(alsrl10@naver.com)
+2024/07/24 16:27:46 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:42:12 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:42:12 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:42:12 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:42:12 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:42:12 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:42:12 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:42:12 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:42:15 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:42:15 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:42:17 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:42:17 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:49:37 [INFO] Running on development
+2024/07/24 16:50:21 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:50:52 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:50:52 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:50:52 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:51:34 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:51:34 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:52:17 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:52:17 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:53:10 [INFO] Running on development
+2024/07/24 16:54:24 message received [227 133 135 227 132 185]
+2024/07/24 16:54:55 [INFO] Running on development
+2024/07/24 16:55:24 message received [227 133 135 227 132 185 227 133 135 227 132 185]
+2024/07/24 16:56:38 [INFO] Running on development
+2024/07/24 16:56:45 message received [227 133 135 227 132 185 227 132 185]
+2024/07/24 16:57:05 message received []
+2024/07/24 16:57:05 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:57:05 message received []
+2024/07/24 16:57:05 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:57:06 message received []
+2024/07/24 16:57:06 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:57:06 message received []
+2024/07/24 16:57:06 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:57:08 message received [227 132 185 227 133 135 227 132 185]
+2024/07/24 16:57:13 [INFO] Running on development
+2024/07/24 16:57:35 [INFO] Running on development
+2024/07/24 16:57:43 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:57:43 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:58:42 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 16:58:42 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 17:17:52 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 17:17:52 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 17:17:55 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 17:17:55 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 17:18:01 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 17:18:01 [INFO] read error: websocket: close 1001 (going away)
+2024/07/24 17:19:16 [INFO] read error: websocket: close 1001 (going away)

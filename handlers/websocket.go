@@ -47,20 +47,6 @@ var Ws = websocket.New(func(c *websocket.Conn) {
 		}
 
 		userName, err := utils.GetUserName(c)
-		if err != nil {
-			messageObj := types.Message{User: "system", Message: "can't find user information"}
-			jsonData, err := json.Marshal(messageObj)
-			if err != nil {
-				logger.Info("json marshal error: %v", err)
-				break
-			}
-			err = c.WriteMessage(mt, jsonData)
-			if err != nil {
-				logger.Info("write error: %v", err)
-				break
-			}
-		}
-
 		messageObj := types.Message{User: userName, Message: string(msg)}
 		broadcastMessage(mt, messageObj, c)
 	}

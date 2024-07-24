@@ -20,6 +20,32 @@ func MakeJwt(userName string, userEmail string) (string, error) {
 	return token.SignedString([]byte(config.JWTSecretKey))
 }
 
+func DecodeJwt(tokenString string) (string, string, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("unexpected signing method")
+		}
+		return []byte(config.JWTSecretKey), nil
+	})
+
+	if err != nil {
+		return "", "", err
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		return "", "", errors.New("invalid token")
+	}
+
+	name, okName := claims["name"].(string)
+	email, okEmail := claims["email"].(string)
+	if !okName || !okEmail {
+		return "", "", errors.New("invalid token claims")
+	}
+
+	return name, email, nil
+}
+
 func MakeJwtCookie(token string) *fiber.Cookie {
 	cookie := new(fiber.Cookie)
 	cookie.Name = "token"

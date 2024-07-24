@@ -36,3 +36,14 @@ func LoginHandler(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{"message": "Login successful", "email": request.UserEmail, "name": name})
 }
+
+func AutoLoginHandler(c *fiber.Ctx) error {
+	token := c.Cookies("token")
+
+	name, email, err := utils.DecodeJwt(token)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Failed to decode token"})
+	}
+
+	return c.JSON(fiber.Map{"name": name, "email": email})
+}
