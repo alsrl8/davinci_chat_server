@@ -2,6 +2,7 @@ package utils
 
 import (
 	"davinci-chat/config"
+	"davinci-chat/consts"
 	"errors"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
@@ -54,6 +55,9 @@ func MakeJwtCookie(token string) *fiber.Cookie {
 	cookie.HTTPOnly = true
 	cookie.Secure = true
 	cookie.SameSite = "Lax"
+	if runEnv := config.GetRunEnv(); runEnv == consts.Production {
+		cookie.Domain = ".songmingi.com"
+	}
 
 	return cookie
 }
