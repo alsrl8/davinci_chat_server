@@ -56,7 +56,7 @@ func MakeJwtCookie(token string) *fiber.Cookie {
 	cookie.Secure = true
 	cookie.SameSite = "Lax"
 	if runEnv := config.GetRunEnv(); runEnv == consts.Production {
-		cookie.Domain = ".songmingi.com"
+		cookie.Domain = "songmingi.com"
 	}
 
 	return cookie
