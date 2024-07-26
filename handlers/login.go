@@ -26,12 +26,12 @@ func LoginHandler(c *fiber.Ctx) error {
 		}
 	}
 
-	token, err := utils.MakeJwt(name, request.UserEmail)
+	token, err := utils.MakeJwt(name, request.UserEmail, false)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Failed to generate token"})
 	}
 
-	cookie := utils.MakeJwtCookie(token)
+	cookie := utils.SetJwtCookie(token)
 	c.Cookie(cookie)
 
 	return c.JSON(fiber.Map{"message": "Login successful", "email": request.UserEmail, "name": name, "isGuest": false})
@@ -47,20 +47,20 @@ func AutoLoginHandler(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"name": "Guest", "email": "", "isGuest": true})
 	}
 
-	name, email, err := utils.DecodeJwt(token)
+	name, email, isGuest, err := utils.DecodeJwt(token)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Failed to decode token"})
 	}
 
-	return c.JSON(fiber.Map{"name": name, "email": email, "isGuest": false})
+	return c.JSON(fiber.Map{"name": name, "email": email, "isGuest": isGuest})
 }
 
 func setGuestToken(c *fiber.Ctx) error {
-	_token, err := utils.MakeJwt("Guest", "")
+	_token, err := utils.MakeJwt("Guest", "", true)
 	if err != nil {
 		return err
 	}
-	cookie := utils.MakeJwtCookie(_token)
+	cookie := utils.SetJwtCookie(_token)
 	c.Cookie(cookie)
 	return nil
 }

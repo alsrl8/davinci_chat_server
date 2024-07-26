@@ -6,7 +6,7 @@ import (
 )
 
 func LogoutHandler(c *fiber.Ctx) error {
-	cookie := utils.MakeJwtCookie("")
+	cookie := utils.SetJwtCookie("")
 	c.Cookie(cookie)
 	return c.JSON(fiber.Map{"message": "Logout successful"})
 }

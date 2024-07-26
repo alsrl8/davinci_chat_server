@@ -17,4 +17,5 @@ func SetupRoutes(app *fiber.App) {
 	app.Get("/ws", handlers.Websocket, handlers.Ws)
 	app.Post("/new-user", handlers.AddNewUser)
 	app.Post("/user-validation", handlers.ValidateUser)
+	app.Get("/count-active-user", handlers.CountActiveChatUser)
 }

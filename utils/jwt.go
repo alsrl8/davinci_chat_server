@@ -11,17 +11,24 @@ import (
 	"time"
 )
 
-func MakeJwt(userName string, userEmail string) (string, error) {
+func MakeJwt(userName string, userEmail string, isGuest bool) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["name"] = userName
 	claims["email"] = userEmail
+
+	if isGuest {
+		claims["isGuest"] = "true"
+	} else {
+		claims["isGuest"] = "false"
+	}
+
 	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
 	return token.SignedString([]byte(config.JWTSecretKey))
 }
 
-func DecodeJwt(tokenString string) (string, string, error) {
+func DecodeJwt(tokenString string) (string, string, bool, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
@@ -30,24 +37,25 @@ func DecodeJwt(tokenString string) (string, string, error) {
 	})
 
 	if err != nil {
-		return "", "", err
+		return "", "", false, err
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		return "", "", errors.New("invalid token")
+		return "", "", false, errors.New("invalid token")
 	}
 
 	name, okName := claims["name"].(string)
 	email, okEmail := claims["email"].(string)
-	if !okName || !okEmail {
-		return "", "", errors.New("invalid token claims")
+	isGuest, okIsGuest := claims["isGuest"].(string)
+	if !okName || !okEmail || !okIsGuest {
+		return "", "", false, errors.New("invalid token claims")
 	}
 
-	return name, email, nil
+	return name, email, isGuest == "true", nil
 }
 
-func MakeJwtCookie(token string) *fiber.Cookie {
+func SetJwtCookie(token string) *fiber.Cookie {
 	cookie := new(fiber.Cookie)
 	cookie.Name = "token"
 	cookie.Value = token
