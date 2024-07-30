@@ -25,5 +25,5 @@ type LoginRequest struct {
 }
 
 type SendInvitationRequest struct {
-	UserName string `json:"userName"`
+	UserEmail string `json:"userEmail"`
 }

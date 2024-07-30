@@ -22,6 +22,7 @@ var mutex sync.Mutex
 
 var connections = make(map[*websocket.Conn]bool)
 var connUserMap = make(map[*websocket.Conn]types.User)
+var userEmailConnMap = make(map[string]*websocket.Conn)
 
 var Ws = websocket.New(func(c *websocket.Conn) {
 	logger := logx.GetLogger()
@@ -36,6 +37,9 @@ var Ws = websocket.New(func(c *websocket.Conn) {
 	defer func() {
 		mutex.Lock()
 		delete(connections, c)
+		userEmail := connUserMap[c].UserEmail
+		delete(userEmailConnMap, userEmail)
+		delete(connUserMap, c)
 		mutex.Unlock()
 		err := c.Close()
 		if err != nil {

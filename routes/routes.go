@@ -19,5 +19,5 @@ func SetupRoutes(app *fiber.App) {
 	app.Post("/user-validation", handlers.ValidateUser)
 	app.Get("/count-active-user", handlers.CountActiveChatUser)
 	app.Get("/user-email-by-name", handlers.GetUserEmailsByNameHandler)
-	//app.Post("/send-invitation")
+	app.Post("/send-invitation", handlers.SendInvitation)
 }

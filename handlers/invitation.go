@@ -1,6 +1,9 @@
 package handlers
 
 import (
+	"davinci-chat/consts"
+	"davinci-chat/types"
+	"encoding/json"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -23,4 +26,36 @@ func GetUserEmailsByNameHandler(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{"emails": emails})
+}
+
+func SendInvitation(c *fiber.Ctx) error {
+	var sendInvitationRequest types.SendInvitationRequest
+	if err := c.BodyParser(&sendInvitationRequest); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Failed to parse request"})
+	}
+
+	conn, ok := userEmailConnMap[sendInvitationRequest.UserEmail]
+	if !ok {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "there is no user with such email now"})
+	}
+
+	// TODO Invitation Message 고도화
+	msg := types.Message{
+		User:        "ADMIN",
+		Message:     "You got an invitation",
+		Time:        "",
+		MessageType: 0,
+	}
+
+	jsonData, err := json.Marshal(msg)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "failed to marshal message"})
+	}
+
+	err = conn.WriteMessage(int(consts.TextMessage), jsonData)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "failed to send invitation"})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "success"})
 }
