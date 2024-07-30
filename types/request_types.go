@@ -23,3 +23,7 @@ type LoginRequest struct {
 	UserEmail string `json:"userEmail"`
 	Password  string `json:"password"`
 }
+
+type SendInvitationRequest struct {
+	UserName string `json:"userName"`
+}

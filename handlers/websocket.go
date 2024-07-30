@@ -21,12 +21,16 @@ func Websocket(c *fiber.Ctx) error {
 var mutex sync.Mutex
 
 var connections = make(map[*websocket.Conn]bool)
+var connUserMap = make(map[*websocket.Conn]types.User)
 
 var Ws = websocket.New(func(c *websocket.Conn) {
 	logger := logx.GetLogger()
 
 	mutex.Lock()
-	connections[c] = true
+	if err := connectWebSocket(c); err != nil {
+		logger.Info("failed to connect with websocket protocols with user")
+		return
+	}
 	mutex.Unlock()
 
 	defer func() {
@@ -51,6 +55,23 @@ var Ws = websocket.New(func(c *websocket.Conn) {
 		broadcastMessage(mt, messageObj, c)
 	}
 })
+
+func connectWebSocket(c *websocket.Conn) error {
+	userName, err := utils.GetUserName(c)
+	if err != nil {
+		return err
+	}
+	userEmail, err := utils.GetUserEmail(c)
+	if err != nil {
+		return err
+	}
+	connUserMap[c] = types.User{
+		UserName:  userName,
+		UserEmail: userEmail,
+	}
+	connections[c] = true
+	return nil
+}
 
 func broadcastMessage(mt int, message types.Message, sender *websocket.Conn) {
 	logger := logx.GetLogger()
