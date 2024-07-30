@@ -22,7 +22,7 @@ func Websocket(c *fiber.Ctx) error {
 var mutex sync.Mutex
 
 var connections = make(map[*websocket.Conn]bool)
-var connUserMap = make(map[*websocket.Conn]types.User)
+var connUserMap = make(map[*websocket.Conn]types.User) // TODO 이거 진짜 필요한 변수인지? 어차피 토큰에 들어있는 정보만 다루는데
 var userEmailConnMap = make(map[string]*websocket.Conn)
 
 var Ws = websocket.New(func(c *websocket.Conn) {
@@ -55,8 +55,29 @@ var Ws = websocket.New(func(c *websocket.Conn) {
 			break
 		}
 
+		_, has := connections[c]
+		if !has {
+			break
+		}
+
 		userName, err := utils.GetUserName(c)
-		messageObj := types.Message{User: userName, Message: string(msg), UserType: consts.User}
+		if err != nil {
+			logger.Info("read error: %v", err)
+			break
+		}
+		isGuest, err := utils.GetIsGuest(c)
+		if err != nil {
+			logger.Info("read error: %v", err)
+			break
+		}
+
+		var userType consts.UserType
+		userType = consts.User
+		if isGuest {
+			userType = consts.Guest
+		}
+
+		messageObj := types.Message{User: userName, Message: string(msg), UserType: userType}
 		broadcastMessage(mt, messageObj, c)
 	}
 })
@@ -84,6 +105,7 @@ func connectWebSocket(c *websocket.Conn) error {
 	if has {
 		delete(connUserMap, prevConn)
 		delete(connections, prevConn)
+		delete(userEmailConnMap, userEmail)
 	}
 
 	connections[c] = true

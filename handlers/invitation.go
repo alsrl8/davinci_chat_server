@@ -45,7 +45,6 @@ func SendInvitation(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "there is no user with such email now"})
 	}
 
-	// TODO Invitation Message 고도화
 	msg := types.Message{
 		User:        "ADMIN",
 		Message:     "You got an invitation",
