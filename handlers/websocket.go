@@ -69,11 +69,13 @@ func connectWebSocket(c *websocket.Conn) error {
 	if err != nil {
 		return err
 	}
+	connections[c] = true
 	connUserMap[c] = types.User{
 		UserName:  userName,
 		UserEmail: userEmail,
 	}
-	connections[c] = true
+	userEmailConnMap[userEmail] = c
+
 	return nil
 }
 
