@@ -3,6 +3,7 @@ package handlers
 import (
 	"davinci-chat/consts"
 	"davinci-chat/types"
+	"davinci-chat/utils"
 	"encoding/json"
 	"github.com/gofiber/fiber/v2"
 )
@@ -15,6 +16,11 @@ func GetUserEmailsByNameHandler(c *fiber.Ctx) error {
 		if !valid {
 			continue
 		} else if connUserMap[conn].UserName != userName {
+			continue
+		}
+
+		isGuest, err := utils.GetIsGuest(conn)
+		if err != nil || isGuest {
 			continue
 		}
 
@@ -45,6 +51,7 @@ func SendInvitation(c *fiber.Ctx) error {
 		Message:     "You got an invitation",
 		Time:        "",
 		MessageType: 0,
+		UserType:    consts.Admin,
 	}
 
 	jsonData, err := json.Marshal(msg)

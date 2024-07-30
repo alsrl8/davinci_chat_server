@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"davinci-chat/consts"
 	"davinci-chat/logx"
 	"davinci-chat/types"
 	"davinci-chat/utils"
@@ -55,7 +56,7 @@ var Ws = websocket.New(func(c *websocket.Conn) {
 		}
 
 		userName, err := utils.GetUserName(c)
-		messageObj := types.Message{User: userName, Message: string(msg)}
+		messageObj := types.Message{User: userName, Message: string(msg), UserType: consts.User}
 		broadcastMessage(mt, messageObj, c)
 	}
 })
@@ -69,6 +70,22 @@ func connectWebSocket(c *websocket.Conn) error {
 	if err != nil {
 		return err
 	}
+	isGuest, err := utils.GetIsGuest(c)
+	if err != nil {
+		return err
+	}
+
+	if isGuest {
+		connections[c] = true
+		return nil
+	}
+
+	prevConn, has := userEmailConnMap[userEmail]
+	if has {
+		delete(connUserMap, prevConn)
+		delete(connections, prevConn)
+	}
+
 	connections[c] = true
 	connUserMap[c] = types.User{
 		UserName:  userName,
@@ -92,7 +109,6 @@ func broadcastMessage(mt int, message types.Message, sender *websocket.Conn) {
 	defer mutex.Unlock()
 
 	for conn := range connections {
-
 		err = conn.WriteMessage(mt, jsonData)
 		if err != nil {
 			logger.Info("write error on broadcast to %v: %v", conn.RemoteAddr(), err)

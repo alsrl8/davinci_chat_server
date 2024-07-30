@@ -113,12 +113,41 @@ func GetUserEmail(c *websocket.Conn) (string, error) {
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		userName, ok := claims["email"].(string)
+		userEmail, ok := claims["email"].(string)
 		if !ok {
 			return "", errors.New("no user email in token")
 		}
-		return userName, nil
+		return userEmail, nil
 	}
 
 	return "", errors.New("can not get user email from token")
+}
+
+func GetIsGuest(c *websocket.Conn) (bool, error) {
+	tokenString := c.Cookies("token")
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method")
+		}
+		return []byte(config.JWTSecretKey), nil
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		isGuest, ok := claims["isGuest"].(string)
+		if !ok {
+			return false, errors.New("no user email in token")
+		}
+
+		if isGuest == "true" {
+			return true, nil
+		} else {
+			return false, nil
+		}
+	}
+
+	return false, errors.New("can not get user email from token")
 }
