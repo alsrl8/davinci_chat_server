@@ -25,5 +25,7 @@ type LoginRequest struct {
 }
 
 type SendInvitationRequest struct {
-	UserEmail string `json:"userEmail"`
+	UserEmail      string `json:"userEmail"`
+	RoomId         string `json:"roomId"`
+	RoomOwnerEmail string `json:"roomOwnerEmail"`
 }

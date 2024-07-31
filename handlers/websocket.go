@@ -41,11 +41,11 @@ var Ws = websocket.New(func(c *websocket.Conn) {
 		userEmail := connUserMap[c].UserEmail
 		delete(userEmailConnMap, userEmail)
 		delete(connUserMap, c)
-		mutex.Unlock()
 		err := c.Close()
 		if err != nil {
 			logger.Info("close connection error: %v", err)
 		}
+		mutex.Unlock()
 	}()
 
 	for {

@@ -5,6 +5,7 @@ import (
 	"davinci-chat/types"
 	"davinci-chat/utils"
 	"encoding/json"
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -47,7 +48,7 @@ func SendInvitation(c *fiber.Ctx) error {
 
 	msg := types.Message{
 		User:        "ADMIN",
-		Message:     "You got an invitation",
+		Message:     fmt.Sprintf("You got an invitation from %s", sendInvitationRequest.RoomOwnerEmail),
 		Time:        "",
 		MessageType: 0,
 		UserType:    consts.Admin,
