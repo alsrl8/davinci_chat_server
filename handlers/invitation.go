@@ -52,7 +52,7 @@ func SendInvitation(c *fiber.Ctx) error {
 		Message:     fmt.Sprintf("You got an invitation from %s", sendInvitationRequest.RoomOwnerEmail),
 		Time:        "",
 		MessageType: 0,
-		UserType:    consts.Admin,
+		UserType:    consts.GameInvitation,
 	}
 
 	jsonData, err := json.Marshal(msg)

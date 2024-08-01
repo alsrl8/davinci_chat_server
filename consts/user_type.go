@@ -6,4 +6,5 @@ const (
 	User UserType = iota
 	Admin
 	Guest
+	GameInvitation
 )
