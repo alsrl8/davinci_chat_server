@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"davinci-chat/consts"
+	"davinci-chat/logx"
 	"davinci-chat/types"
 	"davinci-chat/utils"
 	"encoding/json"
@@ -64,5 +65,7 @@ func SendInvitation(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "failed to send invitation"})
 	}
 
+	logger := logx.GetLogger()
+	logger.Info("Send invitation from owner(%s) to user(%s)", sendInvitationRequest.RoomOwnerEmail, sendInvitationRequest.UserEmail)
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "success"})
 }
